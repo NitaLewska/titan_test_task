@@ -1,28 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.plot.ly/plotly-latest.min.js"
+    ></script>
     <script src="scripts.js" defer></script>
-</head>
-<body>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
     <header></header>
     <main>
-        <h1></h1>
-        <section>
-            <div id="line-chart"></div>
-        </section>
-        <section>
-            <form action="">
-                <textarea name="" id="" cols="30" rows="10"></textarea>
-                <button></button>
-                <input type="time">
-            </form>
-        </section>
+      <h1></h1>
+      <section id="line-chart"></section>
+      <section id="form_n_text">
+        <form action="">
+          <div>
+              <p>Добыто</p>
+            <input type="number" name="" id="extracted_new" />
+            <p>тысяч м3 в</p>
+            <input type="time" id="time_new"/> 
+            <button id="btn_add">добавить</button>
+          </div>
+          <div>
+            <p>План добычи:</p>
+            <input type="number" name="" id="input_plan" />
+            <p>тысяч</p>
+            <button id="btn_plan">установить</button>
+          </div>
+        </form>
+      </section>
     </main>
     <footer></footer>
-</body>
+  </body>
 </html>

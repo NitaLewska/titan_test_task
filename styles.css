@@ -1,0 +1,18 @@
+form {
+    max-width:500px;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+}
+
+form div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+}
+
+form input {
+    height:30px;
+}
