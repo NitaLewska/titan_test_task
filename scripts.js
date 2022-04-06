@@ -35,7 +35,7 @@ for (let i=0; i<time.length; i++) {
 } 
 
 let extractionHour = {
-  y: [0, 23, 0, 0, 30, 1, 30, 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 89, 0, 0, 0],
+  y: [0],
   x: time,
   type: "bar",
   name:"Добыто (час)"
@@ -96,6 +96,7 @@ Plotly.plot(lineDiv, data, layout, config, {scrollZoom: true});
 
 btnPlan = document.querySelector("#btn_plan")
 btnPlan.addEventListener('click', function(e) {
+document.querySelector("#btn_plan").addEventListener('click', function(e) {
   e.preventDefault()
   targetRate = document.querySelector("#input_plan").value
   for (let i=0; i<time.length; i++) {
@@ -104,8 +105,7 @@ btnPlan.addEventListener('click', function(e) {
   Plotly.redraw(lineDiv)
 })
 
-btnAdd = document.querySelector("#btn_add")
-btnAdd.addEventListener('click', function(e) {
+document.querySelector("#btn_add").addEventListener('click', function(e) {
   e.preventDefault()
   let xNew = time.indexOf(document.querySelector('#time_new').value)
   let yNew = document.querySelector("#extracted_new").value
