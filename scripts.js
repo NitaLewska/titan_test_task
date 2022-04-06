@@ -1,4 +1,6 @@
-var lineDiv = document.getElementById("line-chart");
+let lineDiv = document.getElementById("line-chart");
+
+/* Настройка времени от 00:00 до 23:59 */
 
 let time = []
 for(let i=0; i<=10; i++) {
@@ -20,7 +22,9 @@ for(let i=10; i<=23; i++) {
   }
 }
 
-var extractionPlan = {
+/* План добычи*/
+
+let extractionPlan = {
     y: [],
     x: time,
     name:"План добычи",
@@ -28,23 +32,34 @@ var extractionPlan = {
     type: 'scatter'
 }
 
+/* targetRate - величина плана добычи  */
+
 let targetRate = 100
+
+/* y=targetRate */
 
 for (let i=0; i<time.length; i++) {
   extractionPlan.y[i] = targetRate;
 } 
 
+/* Добыча (в час) */
+
 let extractionHour = {
-  y: [0],
+  y: [],
   x: time,
   type: "bar",
   name:"Добыто (час)"
 };
+
+/* y=0 */
+
 for (let i=0; i<time.length; i++) {
   if (!extractionHour.y[i]) {
     extractionHour.y[i] = 0
   }
 } 
+
+/* Добыча (в день) */
 
 let extractionDay = {
   x: time,
@@ -57,9 +72,13 @@ for (let i=1; i<=extractionHour.x.length; i++) {
     extractionDay.y.push(extractionDay.y[i-1]+extractionHour.y[i])
 }
 
-var data = [extractionHour, extractionDay, extractionPlan];
+/* Список графиков для построения */
 
-var layout = {
+let data = [extractionHour, extractionDay, extractionPlan];
+
+/* Настройка внешнего вида графиков */
+
+let layout = {
   title: "Скважина 1-1",
   height: 550,
   font: {
@@ -74,7 +93,7 @@ var layout = {
   xaxis: {
     rangemode: "tozero",
     dtick: 60,
-    tick0: "0:0",
+    tick0: "00:00",
   },
   yaxis: {
     title: "Дебит",
@@ -87,15 +106,16 @@ var layout = {
   legend: {"orientation": "h"}
 };
 
-var config = { responsive: true };
+let config = { responsive: true };
+
+/* Вызов Plotly */
 
 Plotly.plot(lineDiv, data, layout, config, {scrollZoom: true});
 
 
 /* Ввод данных */
 
-btnPlan = document.querySelector("#btn_plan")
-btnPlan.addEventListener('click', function(e) {
+/* План добычи */
 document.querySelector("#btn_plan").addEventListener('click', function(e) {
   e.preventDefault()
   targetRate = document.querySelector("#input_plan").value
@@ -105,6 +125,7 @@ document.querySelector("#btn_plan").addEventListener('click', function(e) {
   Plotly.redraw(lineDiv)
 })
 
+/* Добавить/изменить точку */
 document.querySelector("#btn_add").addEventListener('click', function(e) {
   e.preventDefault()
   let xNew = time.indexOf(document.querySelector('#time_new').value)
