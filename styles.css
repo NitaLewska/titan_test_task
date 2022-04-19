@@ -1,5 +1,28 @@
+/* Box Model Fix */
+html {
+    box-sizing: border-box;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+    margin: 0px;
+}
+
+main {
+    width: 100vw;
+}
+
+h1, h1+p {
+    text-align: center;
+}
+
+#line-chart {
+    width:80%;
+    margin: 0 auto;
+}
+
 form {
-    max-width:500px;
+    max-width:600px;
     display: flex;
     flex-direction: column;
     margin: 0 auto;
@@ -10,7 +33,7 @@ form div {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-
+    margin-bottom: 15px;
 }
 
 form input {

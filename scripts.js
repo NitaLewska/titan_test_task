@@ -35,6 +35,10 @@ let extractionPlan = {
 /* targetRate - величина плана добычи  */
 
 let targetRate = 100
+if(localStorage.getItem('targetRate')){
+  targetRate = localStorage.getItem('targetRate')
+}
+
 
 /* y=targetRate */
 
@@ -72,15 +76,29 @@ for (let i=1; i<=extractionHour.x.length; i++) {
     extractionDay.y.push(extractionDay.y[i-1]+extractionHour.y[i])
 }
 
+let interpolation = 0
+let interpolation_start = 0
+
+let extraction_interpolation ={
+  x: time,
+  y: [],
+  type: "scater",
+  name: "www",
+  line: {
+    dash: 'dot',
+    width: 4
+  }
+}
+
 /* Список графиков для построения */
 
-let data = [extractionHour, extractionDay, extractionPlan];
+let data = [extractionHour, extractionDay, extractionPlan, extraction_interpolation];
 
 /* Настройка внешнего вида графиков */
 
 let layout = {
   title: "Скважина 1-1",
-  height: 550,
+  height: 500,
   font: {
     family: "Lato",
     size: 16,
@@ -99,7 +117,7 @@ let layout = {
     title: "Дебит",
     titlefont: {
       color: "black",
-      size: 12,
+      size: 16,
     },
     rangemode: "tozero",
   },
@@ -110,7 +128,7 @@ let config = { responsive: true };
 
 /* Вызов Plotly */
 
-Plotly.plot(lineDiv, data, layout, config, {scrollZoom: true});
+Plotly.plot(lineDiv, data, layout, config, {scrollZoom: true}, {displaylogo: false});
 
 
 /* Ввод данных */
@@ -119,6 +137,7 @@ Plotly.plot(lineDiv, data, layout, config, {scrollZoom: true});
 document.querySelector("#btn_plan").addEventListener('click', function(e) {
   e.preventDefault()
   targetRate = document.querySelector("#input_plan").value
+  localStorage.setItem('targetRate', targetRate)
   for (let i=0; i<time.length; i++) {
     extractionPlan.y[i] = targetRate;
   } 
@@ -134,8 +153,26 @@ document.querySelector("#btn_add").addEventListener('click', function(e) {
   for (let i=1; i<=extractionHour.x.length; i++) {
     extractionDay.y[i]=(parseInt(extractionDay.y[i-1])+parseInt(extractionHour.y[i]))
   }
+  for (let i=0; i<time.length; i++) {
+    if (extractionHour.y[i] != 0) {
+      interpolation = extractionDay.y[i]/i
+      interpolation_start = i
+    }
+  }
+  extraction_interpolation.y=[]
+
+  for (let i=interpolation_start; i<time.length; i++) {
+    extraction_interpolation.y[i] = interpolation*i
+  }
   Plotly.redraw(lineDiv)
 document.querySelector('#time_new').value = 0
 document.querySelector("#extracted_new").value = 0
 
+})
+
+document.querySelector("#btn_clear").addEventListener('click', function(e) {
+  e.preventDefault()
+  localStorage.clear()
+  location.reload();
+  return false;
 })
