@@ -17,6 +17,7 @@ h1, h1+p {
 }
 
 #line-chart {
+    height: 60vh;
     width:80%;
     margin: 0 auto;
 }
@@ -38,4 +39,16 @@ form div {
 
 form input {
     height:30px;
+}
+
+#comments {
+    margin: 50px auto;
+    display: flex;
+    flex-direction: column;
+    width: 60vw;
+    min-width: 300px;
+}
+
+#comments h2, #comments h3{
+    text-align: center;
 }
