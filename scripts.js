@@ -50,7 +50,7 @@ for (let i = 0; i < time.length; i++) {
 }
 
 /* Добыча (в час) */
-
+/* Этот график не строится, но используется в расчетах */
 let extractionHour = {
   y: [],
   x: time,
@@ -60,6 +60,14 @@ let extractionHour = {
   width: 15,
 };
 
+/* y=0 */
+for (let i = 0; i < time.length; i++) {
+  if (!extractionHour.y[i]) {
+    extractionHour.y[i] = 0;
+  }
+}
+
+/* Разница за каждый час */
 let extractionHourAdded = {
   y: [],
   x: time,
@@ -68,16 +76,8 @@ let extractionHourAdded = {
   width: 45,
   marker: {
     color: "#7CFC00",
-  }
+  },
 };
-
-/* y=0 */
-
-for (let i = 0; i < time.length; i++) {
-  if (!extractionHour.y[i]) {
-    extractionHour.y[i] = 0;
-  }
-}
 
 /* Добыча (в день) промежуточные вычисления*/
 
@@ -101,7 +101,7 @@ let extractionDayGraph = {
   name: "Добыто (сутки)",
 };
 
-/*  */
+/*Прогноз добычи*/
 
 let interpolation = 0;
 let interpolation_start = 0;
@@ -127,7 +127,7 @@ let data = [
   extractionHourAdded,
 ];
 
-/* Настройка внешнего вида графиков */
+/* Настройка внешнего вида координатной плоскости */
 
 let layout = {
   title: "Скважина 1-1",
@@ -180,9 +180,13 @@ document.querySelector("#btn_plan").addEventListener("click", function (e) {
   e.preventDefault();
   targetRate = document.querySelector("#input_plan").value;
   localStorage.setItem("targetRate", targetRate);
+
+  /* пересчет всех точек плана добычи */
   for (let i = 0; i < time.length; i++) {
     extractionPlan.y[i] = targetRate;
   }
+
+  /* перекрас графика прогноза */
   if (extraction_interpolation.y[time.length - 1] >= targetRate) {
     extraction_interpolation.line.color = "#47FF6C";
   } else {
@@ -201,16 +205,17 @@ document.querySelector("#btn_add").addEventListener("click", function (e) {
     extractionDay.y[i] =
       parseInt(extractionDay.y[i - 1]) + parseInt(extractionHour.y[i]);
   }
-
+  /* пересчёт графика прогноза добычи */
   for (let i = 0; i < time.length; i++) {
     if (extractionHour.y[i] != 0) {
       interpolation = extractionDay.y[i] / i;
       interpolation_start = i;
     }
   }
-  extractionDayGraph.y = []
-  extractionDayGraph.x = []
-  
+  extractionDayGraph.y = [];
+  extractionDayGraph.x = [];
+
+  /* пересчет прочих графиков */
   for (let i = 1; i <= time.length; i++) {
     if (extractionDay.y[i] != extractionDay.y[i - 1]) {
       extractionDayGraph.y.push(extractionDay.y[i]);
@@ -228,7 +233,7 @@ document.querySelector("#btn_add").addEventListener("click", function (e) {
   for (let i = interpolation_start; i < time.length; i++) {
     extraction_interpolation.y[i] = Math.round(interpolation * i);
   }
-
+  /* перекрас графика прогноза добычи */
   if (extraction_interpolation.y[time.length - 1] >= targetRate) {
     extraction_interpolation.line.color = "#47FF6C";
   } else {
@@ -239,7 +244,7 @@ document.querySelector("#btn_add").addEventListener("click", function (e) {
   document.querySelector("#extracted_new").value = 0;
 });
 
-/*  */
+/*кнопка сброса*/
 
 document.querySelector("#btn_clear").addEventListener("click", function (e) {
   e.preventDefault();
