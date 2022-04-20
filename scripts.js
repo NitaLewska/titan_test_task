@@ -65,7 +65,10 @@ let extractionHourAdded = {
   x: time,
   type: "bar",
   name: "Добыто (час)",
-  width: 30,
+  width: 45,
+  marker: {
+    color: "#7CFC00",
+  }
 };
 
 /* y=0 */
