@@ -3,7 +3,7 @@ let lineDiv = document.getElementById("line-chart");
 /* Настройка времени от 00:00 до 23:59 */
 
 let time = []
-for(let i=0; i<=10; i++) {
+for(let i=0; i<10; i++) {
   for(let j=0; j<=59; j++) {
     if (j<10) {
       time.push("0"+i+":0"+j)  
@@ -29,16 +29,19 @@ let extractionPlan = {
     x: time,
     name:"План добычи",
     fill: 'tozeroy',
-    type: 'scatter'
+    type: 'scatter',
+    fillcolor: '#B6E2FF50',
+    line: {
+      color: '#6CC5FF'
+    },
 }
 
 /* targetRate - величина плана добычи  */
 
-let targetRate = 100
+let targetRate = 0;
 if(localStorage.getItem('targetRate')){
   targetRate = localStorage.getItem('targetRate')
 }
-
 
 /* y=targetRate */
 
@@ -55,6 +58,7 @@ let extractionHour = {
   name:"Добыто (час)"
 };
 
+
 /* y=0 */
 
 for (let i=0; i<time.length; i++) {
@@ -63,12 +67,12 @@ for (let i=0; i<time.length; i++) {
   }
 } 
 
-/* Добыча (в день) */
+/* Добыча (в день) промежуточные вычисления*/
 
 let extractionDay = {
   x: time,
   y: [extractionHour.y[0]],
-  type: "scater",
+  type: "scatter",
   name:"Добыто (сутки)"
 };
 
@@ -76,13 +80,24 @@ for (let i=1; i<=extractionHour.x.length; i++) {
     extractionDay.y.push(extractionDay.y[i-1]+extractionHour.y[i])
 }
 
+/* Добыча (в день) график*/
+
+let extractionDayGraph = {
+  x: [],
+  y: [],
+  type: "scatter",
+  name:"Добыто (сутки)"
+};
+
+/*  */
+
 let interpolation = 0
 let interpolation_start = 0
 
 let extraction_interpolation ={
   x: time,
   y: [],
-  type: "scater",
+  type: "scatter",
   name: "www",
   line: {
     dash: 'dot',
@@ -92,26 +107,26 @@ let extraction_interpolation ={
 
 /* Список графиков для построения */
 
-let data = [extractionHour, extractionDay, extractionPlan, extraction_interpolation];
+let data = [extractionPlan, extractionHour, extraction_interpolation, extractionDayGraph];
 
 /* Настройка внешнего вида графиков */
 
 let layout = {
   title: "Скважина 1-1",
-  height: 500,
   font: {
     family: "Lato",
-    size: 16,
+    size: 14,
     color: "rgb(100,150,200)",
   },
-  plot_bgcolor: "rgba(200,255,0,0.1)",
+  plot_bgcolor: "#FFF",
   margin: {
     pad: 10,
   },
   xaxis: {
     rangemode: "tozero",
-    dtick: 60,
+    dtick: 120,
     tick0: "00:00",
+    size: 12,
   },
   yaxis: {
     title: "Дебит",
@@ -121,7 +136,9 @@ let layout = {
     },
     rangemode: "tozero",
   },
-  legend: {"orientation": "h"}
+  legend: {
+    y:5,
+    "orientation": "h"}
 };
 
 let config = { responsive: true };
@@ -129,7 +146,6 @@ let config = { responsive: true };
 /* Вызов Plotly */
 
 Plotly.plot(lineDiv, data, layout, config, {scrollZoom: true}, {displaylogo: false});
-
 
 /* Ввод данных */
 
@@ -153,12 +169,21 @@ document.querySelector("#btn_add").addEventListener('click', function(e) {
   for (let i=1; i<=extractionHour.x.length; i++) {
     extractionDay.y[i]=(parseInt(extractionDay.y[i-1])+parseInt(extractionHour.y[i]))
   }
+
   for (let i=0; i<time.length; i++) {
     if (extractionHour.y[i] != 0) {
       interpolation = extractionDay.y[i]/i
       interpolation_start = i
     }
   }
+
+  for (let i=1; i<=time.length; i++) {
+    if (extractionDay.y[i] != extractionDay.y[i-1]) {
+    extractionDayGraph.y.push(extractionDay.y[i])
+    extractionDayGraph.x.push(time[i])
+    }
+  }
+
   extraction_interpolation.y=[]
 
   for (let i=interpolation_start; i<time.length; i++) {
@@ -169,6 +194,8 @@ document.querySelector('#time_new').value = 0
 document.querySelector("#extracted_new").value = 0
 
 })
+
+/*  */
 
 document.querySelector("#btn_clear").addEventListener('click', function(e) {
   e.preventDefault()
