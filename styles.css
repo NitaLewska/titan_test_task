@@ -52,3 +52,8 @@ form input {
 #comments h2, #comments h3{
     text-align: center;
 }
+
+#comments p{
+    margin-top: 20px;
+    text-align: center;
+}
